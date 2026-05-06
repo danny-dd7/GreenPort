@@ -117,58 +117,62 @@
     <!-- Reporte Rápido Start -->
     <div class="container-fluid booking mt-5 pb-5">
         <div class="container pb-5">
-            <div class="bg-light shadow" style="padding: 30px;">
-                <div class="row align-items-center" style="min-height: 60px;">
-                    <div class="col-md-10">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mb-3 mb-md-0">
-                                    <select class="custom-select px-4" style="height: 47px;">
-                                        <option selected>Zona de Acapulco</option>
-                                        <option value="1">Zona Dorada</option>
-                                        <option value="2">Zona Tradicional</option>
-                                        <option value="3">Zona Diamante</option>
-                                        <option value="4">Puerto Marqués</option>
-                                        <option value="5">Costera Miguel Alemán</option>
-                                    </select>
+            <form action="submit_report.php" method="post">
+                <div class="bg-light shadow" style="padding: 30px;">
+                    <div class="row align-items-center" style="min-height: 60px;">
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3 mb-md-0">
+                                        <select name="zona" class="custom-select px-4" style="height: 47px;">
+                                            <option selected>Zona de Acapulco</option>
+                                            <option value="Zona Dorada">Zona Dorada</option>
+                                            <option value="Zona Tradicional">Zona Tradicional</option>
+                                            <option value="Zona Diamante">Zona Diamante</option>
+                                            <option value="Puerto Marqués">Puerto Marqués</option>
+                                            <option value="Costera Miguel Alemán">Costera Miguel Alemán</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 mb-md-0">
-                                    <div class="date" id="date1" data-target-input="nearest">
-                                        <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Fecha del Reporte" data-target="#date1" data-toggle="datetimepicker"/>
+                                <div class="col-md-3">
+                                    <div class="mb-3 mb-md-0">
+                                        <div class="date" id="date1" data-target-input="nearest">
+                                            <input type="text" name="fecha" class="form-control p-4 datetimepicker-input" placeholder="Fecha del Reporte" data-target="#date1" data-toggle="datetimepicker"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 mb-md-0">
+                                        <select name="tipo_residuo" class="custom-select px-4" style="height: 47px;">
+                                            <option selected>Tipo de Residuo</option>
+                                            <option value="Residuos Sólidos Urbanos">Residuos Sólidos Urbanos</option>
+                                            <option value="Plásticos y Botellas">Plásticos y Botellas</option>
+                                            <option value="Materiales Tóxicos">Materiales Tóxicos</option>
+                                            <option value="Otros Desechos">Otros Desechos</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 mb-md-0">
+                                        <select name="urgencia" class="custom-select px-4" style="height: 47px;">
+                                            <option selected>Nivel de Urgencia</option>
+                                            <option value="Bajo">Bajo</option>
+                                            <option value="Medio">Medio</option>
+                                            <option value="Alto">Alto</option>
+                                            <option value="Crítico">Crítico</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 mb-md-0">
-                                    <select class="custom-select px-4" style="height: 47px;">
-                                        <option selected>Tipo de Residuo</option>
-                                        <option value="1">Residuos Sólidos Urbanos</option>
-                                        <option value="2">Plásticos y Botellas</option>
-                                        <option value="3">Materiales Tóxicos</option>
-                                        <option value="4">Otros Desechos</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 mb-md-0">
-                                    <select class="custom-select px-4" style="height: 47px;">
-                                        <option selected>Nivel de Urgencia</option>
-                                        <option value="1">Bajo</option>
-                                        <option value="2">Medio</option>
-                                        <option value="3">Alto</option>
-                                        <option value="4">Crítico</option>
-                                    </select>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-block" type="submit" style="height: 47px; margin-top: -2px;">Generar Reporte</button>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-primary btn-block" type="submit" style="height: 47px; margin-top: -2px;">Generar Reporte</button>
-                    </div>
                 </div>
-            </div>
+            </form>
+
+            <div id="report-message" class="mt-3 text-center"></div>
         </div>
     </div>
     <!-- Reporte Rápido End -->
@@ -518,6 +522,44 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const reportForm = document.querySelector('form[action="submit_report.php"]');
+    const reportMessage = document.getElementById('report-message');
+    if (!reportForm || !reportMessage) return;
+
+    reportForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        reportMessage.textContent = '';
+        reportMessage.className = 'mt-3 text-center';
+
+        const formData = new FormData(reportForm);
+        fetch(reportForm.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+        })
+        .then(text => {
+            // Revisar qué respondió el PHP
+            if (text.includes('exitosamente')) {
+                reportMessage.textContent = 'Reporte realizado exitosamente.';
+                reportMessage.classList.add('text-success');
+            } else {
+                // Mostrar el error real que mandó PHP
+                reportMessage.textContent = 'Error: ' + text;
+                reportMessage.classList.add('text-danger');
+            }
+        })
+        .catch(() => {
+            reportMessage.textContent = 'Error de conexión al servidor.';
+            reportMessage.classList.add('text-danger');
+        });
+    });
+});
+</script>
 </body>
 
 </html>
