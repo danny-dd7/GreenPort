@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root"; // Default XAMPP user
 $password = ""; // Default XAMPP password
-$dbname = "reportes";
+$dbname = "greenport";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
