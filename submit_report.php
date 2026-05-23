@@ -14,6 +14,8 @@ function safeValue($value) {
     return trim($value);
 }
 
+date_default_timezone_set('America/Mexico_City');
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $apellido = safeValue($_POST['apellido'] ?? '');
     $nombre = safeValue($_POST['nombre'] ?? '');
