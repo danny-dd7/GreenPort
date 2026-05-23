@@ -15,13 +15,14 @@ function safeValue($value) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $nombre_apellido = safeValue($_POST['nombre_apellido'] ?? '');
+    $apellido = safeValue($_POST['apellido'] ?? '');
+    $nombre = safeValue($_POST['nombre'] ?? '');
     $zona = safeValue($_POST['zona'] ?? '');
     $tipo_residuo = safeValue($_POST['tipo_residuo'] ?? '');
     $telefono = safeValue($_POST['telefono'] ?? '');
     $problema = safeValue($_POST['problema'] ?? '');
 
-    if (!$nombre_apellido || !$zona || !$tipo_residuo || !$telefono || !$problema) {
+    if (!$apellido || !$nombre || !$zona || !$tipo_residuo || !$telefono || !$problema) {
         echo "Faltan datos obligatorios para enviar el reporte.";
         $conn->close();
         exit;
@@ -84,14 +85,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $urgencia = 'Media';
     $fotoPaths = !empty($savedFiles) ? implode(',', $savedFiles) : '';
 
-    $stmt = $conn->prepare("INSERT INTO reports (nombre_apellido, zona, tipo_residuo, telefono, problema, fotos, fecha, urgencia) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO reports (apellido, nombre, zona, tipo_residuo, telefono, problema, fotos, fecha, urgencia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         echo "Error de base de datos: " . $conn->error;
         $conn->close();
         exit;
     }
 
-    $stmt->bind_param('ssssssss', $nombre_apellido, $zona, $tipo_residuo, $telefono, $problema, $fotoPaths, $fecha, $urgencia);
+    $stmt->bind_param('sssssssss', $apellido, $nombre, $zona, $tipo_residuo, $telefono, $problema, $fotoPaths, $fecha, $urgencia);
     if ($stmt->execute()) {
         echo "Reporte enviado exitosamente.";
     } else {

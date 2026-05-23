@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>GreenPort - Panel Administrador</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Administrador GreenPort" name="description">
+
+    <link href="../img/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <div class="container-fluid py-2 mb-4 bg-primary">
+        <div class="container py-3">
+            <div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 90px;">
+                <h1 class="display-4 text-white text-uppercase">GREENPORT ADMIN</h1>
+                <p class="text-white-50 mb-0">Solo el personal autorizado puede ingresar al panel de control.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5 flex-fill">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="bg-white rounded shadow-sm p-5" style="transform: scale(1.2); transform-origin: top center;">
+                    <h3 class="text-primary mb-4 text-center">Iniciar Sesión</h3>
+                    <form action="../Administrador/dashboard.html" method="post">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Usuario</label>
+                            <input type="text" name="usuario" class="form-control p-4" placeholder="Usuario administrador" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Contraseña</label>
+                            <input type="password" name="contrasena" class="form-control p-4" placeholder="Contraseña" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block py-3">Acceder</button>
+                    </form>
+                    <p class="text-center text-muted mt-4 mb-0">No existe opción de registro en esta página.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid bg-primary" style="height: 72px;"></div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
