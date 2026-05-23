@@ -1,8 +1,8 @@
 <?php
 // filepath: c:\Users\angel\OneDrive\Documentos\GitHub\GreenPort\submit_report.php
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "root"; // Default XAMPP user
+$password = ""; // Default XAMPP password
 $dbname = "BaseDatos";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
