@@ -114,59 +114,46 @@
     <!-- Header End -->
 
 
-    <!-- Reporte Rápido Start -->
+    <!-- Reporte Ciudadano Start -->
     <div class="container-fluid booking mt-5 pb-5">
         <div class="container pb-5">
-            <form action="submit_report.php" method="post">
+            <form action="submit_report.php" method="post" enctype="multipart/form-data">
                 <div class="bg-light shadow" style="padding: 30px;">
-                    <div class="row align-items-center" style="min-height: 60px;">
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="mb-3 mb-md-0">
-                                        <select name="zona" class="custom-select px-4" style="height: 47px;">
-                                            <option selected>Zona de Acapulco</option>
-                                            <option value="Zona Dorada">Zona Dorada</option>
-                                            <option value="Zona Tradicional">Zona Tradicional</option>
-                                            <option value="Zona Diamante">Zona Diamante</option>
-                                            <option value="Puerto Marqués">Puerto Marqués</option>
-                                            <option value="Costera Miguel Alemán">Costera Miguel Alemán</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3 mb-md-0">
-                                        <div class="date" id="date1" data-target-input="nearest">
-                                            <input type="text" name="fecha" class="form-control p-4 datetimepicker-input" placeholder="Fecha del Reporte" data-target="#date1" data-toggle="datetimepicker"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3 mb-md-0">
-                                        <select name="tipo_residuo" class="custom-select px-4" style="height: 47px;">
-                                            <option selected>Tipo de Residuo</option>
-                                            <option value="Residuos Sólidos Urbanos">Residuos Sólidos Urbanos</option>
-                                            <option value="Plásticos y Botellas">Plásticos y Botellas</option>
-                                            <option value="Materiales Tóxicos">Materiales Tóxicos</option>
-                                            <option value="Otros Desechos">Otros Desechos</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="mb-3 mb-md-0">
-                                        <select name="urgencia" class="custom-select px-4" style="height: 47px;">
-                                            <option selected>Nivel de Urgencia</option>
-                                            <option value="Bajo">Bajo</option>
-                                            <option value="Medio">Medio</option>
-                                            <option value="Alto">Alto</option>
-                                            <option value="Crítico">Crítico</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <input type="text" name="nombre_apellido" class="form-control p-4" placeholder="Nombre y apellido" required>
                         </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary btn-block" type="submit" style="height: 47px; margin-top: -2px;">Generar Reporte</button>
+                        <div class="col-md-6 mb-3">
+                            <input type="tel" name="telefono" class="form-control p-4" placeholder="Teléfono" pattern="[0-9+()\s-]{7,20}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <select name="zona" class="custom-select px-4" style="height: 47px;" required>
+                                <option value="" selected>Zona donde está la basura</option>
+                                <option value="Zona Dorada">Zona Dorada</option>
+                                <option value="Zona Tradicional">Zona Tradicional</option>
+                                <option value="Zona Diamante">Zona Diamante</option>
+                                <option value="Puerto Marqués">Puerto Marqués</option>
+                                <option value="Costera Miguel Alemán">Costera Miguel Alemán</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <select name="tipo_residuo" class="custom-select px-4" style="height: 47px;" required>
+                                <option value="" selected>Tipo de residuo</option>
+                                <option value="Residuos Sólidos Urbanos">Residuos Sólidos Urbanos</option>
+                                <option value="Plásticos y Botellas">Plásticos y Botellas</option>
+                                <option value="Materiales Tóxicos">Materiales Tóxicos</option>
+                                <option value="Otros Desechos">Otros Desechos</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <textarea name="problema" class="form-control p-4" rows="5" placeholder="¿Este residuo presenta un problema para el orden público? Describe lo que quieras" required></textarea>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <label class="text-secondary d-block mb-2">Agregar hasta 3 fotos (máx. 4 MB cada una)</label>
+                            <input type="file" name="fotos[]" class="form-control-file" accept="image/*" multiple>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-block" type="submit" style="height: 47px; margin-top: -2px;">Enviar Reporte</button>
                         </div>
                     </div>
                 </div>
@@ -175,7 +162,7 @@
             <div id="report-message" class="mt-3 text-center"></div>
         </div>
     </div>
-    <!-- Reporte Rápido End -->
+    <!-- Reporte Ciudadano End -->
 
 
     <!-- Reportes Start -->
@@ -533,6 +520,21 @@ document.addEventListener('DOMContentLoaded', function() {
         reportMessage.textContent = '';
         reportMessage.className = 'mt-3 text-center';
 
+        const files = reportForm.querySelector('input[type="file"]').files;
+        if (files.length > 3) {
+            reportMessage.textContent = 'Solo puedes subir hasta 3 fotos.';
+            reportMessage.classList.add('text-danger');
+            return;
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > 4 * 1024 * 1024) {
+                reportMessage.textContent = 'Cada foto debe pesar como máximo 4 MB.';
+                reportMessage.classList.add('text-danger');
+                return;
+            }
+        }
+
         const formData = new FormData(reportForm);
         fetch(reportForm.action, {
             method: 'POST',
@@ -543,12 +545,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.text();
         })
         .then(text => {
-            // Revisar qué respondió el PHP
-            if (text.includes('exitosamente')) {
-                reportMessage.textContent = 'Reporte realizado exitosamente.';
+            if (text.includes('exitosamente') || text.includes('enviado')) {
+                reportMessage.textContent = 'Su reporte ha sido enviado';
                 reportMessage.classList.add('text-success');
+                reportForm.querySelector('button[type="submit"]').disabled = true;
+                reportForm.style.opacity = '0.6';
+                reportForm.style.pointerEvents = 'none';
             } else {
-                // Mostrar el error real que mandó PHP
                 reportMessage.textContent = 'Error: ' + text;
                 reportMessage.classList.add('text-danger');
             }
